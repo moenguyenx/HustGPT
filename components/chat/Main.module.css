@@ -1,0 +1,53 @@
+.main {
+    min-height: calc(100vh - 14rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 6rem 10rem;
+    margin-bottom: 0;
+    flex: 9;
+}
+
+.chatFooter {
+    margin-top: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.inp {
+    padding: 0.5rem;
+    background: rgba(28,30,58,1);
+    display: flex;
+    align-items: center;
+    border-radius: 0.5rem;
+    width: 80rem;
+}
+
+.inp>input {
+    width: calc(100% - 3rem);
+    outline: none;
+    padding: 1.25rem;
+    color: white;
+}
+
+.inp>input, .send {
+    background: transparent;
+    border: none;
+}
+
+.chatFooter>p {
+    margin: 1.5rem 0;
+}
+
+.label {
+    cursor: pointer;
+}
+
+.label:hover {
+    background-color: lightgray;
+    border-radius: 0.5rem;
+}
+

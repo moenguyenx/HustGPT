@@ -1,0 +1,77 @@
+.active-modal {
+    overflow-y: hidden;
+}
+
+
+.modal, .overlay {
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+    border-radius: 1rem;
+}
+
+.overlay {
+    background: rgba(49,49,49,0.8);
+}
+
+.modal-content {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    line-height: 1.4;
+    background: #f1f1f1;
+    padding: 14px 28px;
+    border-radius: 3px;
+    max-width: 600px;
+    min-width: 300px;
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 7px;
+}
+
+.title{
+    color: #000;
+    font-size: large;
+}
+
+.inp {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .inp input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+  }
+  
+  .inp input:focus {
+    outline: none;
+    border-color: #5A4BFF;
+    box-shadow: 0 0 0 2px rgba(90, 75, 255, 0.2);
+  }
+
+.create-btn {
+    padding: 10px 20px; /* Padding inside button */
+    background-color: #007bff; /* Blue background color */
+    color: #fff; /* White text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 1rem; /* Normal font size */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+.create-btn:hover {
+    background-color: #0056b3; /* Darker blue color on hover */
+}

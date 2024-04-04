@@ -1,0 +1,25 @@
+.chats {
+    overflow: hidden;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    width: 80rem;
+    max-width: 85rem;
+    height: calc(100vh - 17rem);
+}
+
+.chats::-webkit-scrollbar {
+    width: 0px;
+}
+
+.chats::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.chats::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+.chats::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
