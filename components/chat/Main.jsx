@@ -16,7 +16,9 @@ function MainChat ({ selectedChatbox }) {
 
     const msgEnd = useRef(null);
     const [messages, setMessages] = useState([]);
-    const [promt, setPromt] = useState("");
+    const [prompt, setPrompt] = useState("");
+    const [file, setFile] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState(null)
 
     useEffect(() => {
         if (selectedChatbox !== null) {
@@ -36,37 +38,91 @@ function MainChat ({ selectedChatbox }) {
         }
     }, [messages]);
 
-    function handlePromtChange(event) {
+    useEffect(() => {
+        if (!file) {
+          return
+        }
+    
+        const reader = new FileReader()
+    
+        reader.onloadend = () => {
+          setPreviewUrl(reader.result)
+        }
+    
+        reader.readAsDataURL(file)
+      }, [file])
+
+    function handlePromptChange(event) {
         const { name, value } = event.target;
-        setPromt(value);
+        setPrompt(value);
+    }
+
+    function handleFileChange(event) {
+        setFile(event.target.files[0]);
     }
 
     async function handleSend() {
-        if (promt !== null && promt.trim() !== "") {
-            setMessages([
-                ...messages,
-                {message: promt, from_bot: false}
-            ])
-
-            try {
-                const response = await axios({
-                    method: "POST",
-                    url: `${BACKEND_URL}/message/${selectedChatbox}`,
-                    data: {message: promt},
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                })
-                console.log(response.data);
-                setMessages([
-                    ...messages,
-                    {message: response.data.msg, from_bot: true}
-                ])
-            } catch (error) {
-                console.log(error);
+        try {
+            var data = {
+                message: null,
+                img_url: null
             }
+            if (prompt !== "") 
+            {
+                data.message = prompt;  
+                if (file) {
+                    const formData = new FormData();
+                    formData.append("file", file);
+                    try {
+                        const response = await fetch("api/s3-upload", {
+                            method: "POST",
+                            body: formData,
+                        });
+                        const { img_url } = await response.json()
+                        data.img_url = img_url;
+                    } catch ( error) {
+                        console.error(error);
+                    }
+                }
+                const userMessage = { ...data, from_bot: false };
+                setMessages([...messages, userMessage]);
+                setPrompt("");
+            } 
+            else if (prompt === "" && file !== null)
+            {
+                const formData = new FormData();
+                formData.append("file", file);
+                try {
+                    const response = await fetch("api/s3-upload", {
+                        method: "POST",
+                        body: formData,
+                    });
+                    const { img_url } = await response.json()
+                    data.img_url = img_url;
+                } catch ( error) {
+                    console.error(error);
+                }
+            }
+            // request backend
+            const response = await axios({
+                method: "POST",
+                url: `${BACKEND_URL}/message/${selectedChatbox}`,
+                data: data,
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            const botMessage = {
+                message: response.data.msg, 
+                img_url: response.data.img_url, 
+                from_bot: true 
+            };
+            setMessages(prevMessages => [...prevMessages, botMessage]);
+        } catch (error) {
+            console.log(error);
         }
-        setPromt("");
+    
     }
 
     return (
@@ -75,7 +131,7 @@ function MainChat ({ selectedChatbox }) {
             <>
             <Messages>
                 {messages.map((message, index) => (
-                    <Message key={index} from_bot={message.from_bot} message={message.message} />
+                    <Message key={index} from_bot={message.from_bot} message={message.message} img_url={message.img_url}/>
                 ))}
                 <div ref={msgEnd}></div>
             </Messages>
@@ -83,9 +139,23 @@ function MainChat ({ selectedChatbox }) {
                 <div className={classes.inp}>
                     <input type="text" name="message" 
                             placeholder="Send a Message"
-                            value={promt}
-                            onChange={handlePromtChange}
+                            value={prompt}
+                            onChange={handlePromptChange}
                             /> 
+                    <label htmlFor="file" className={classes.label}>
+                        <Image src={attachImg} height={25} width={25}/>
+                    </label>
+                    <input type="file" 
+                            id="file" 
+                            accept="image/*" 
+                            style={{visibility: "hidden"}}
+                            onChange={handleFileChange}
+                            />
+                    {previewUrl && 
+                    <div className={classes.inpImg}>
+                        <Image width={100} height={100} src={previewUrl} alt="Preview" />
+                    </div>
+                    }
                     <button className={classes.send} onClick={handleSend}>
                         <Image src={sendBtn} alt="Send" />
                     </button>
@@ -98,8 +168,3 @@ function MainChat ({ selectedChatbox }) {
 }
 
 export default MainChat;
-
-{/* <label htmlFor="file" className={classes.label}>
-                        <Image src={attachImg} height={20} width={20}/>
-                    </label>
-                    <input type="file" id="file" style={{visibility: "hidden"}}/> */}

@@ -141,7 +141,15 @@ def create_chatbox():
 @jwt_required()
 def post_message(chatbox_id):
     new_msg = request.json.get("message")
-    msg = Message(chatbox_id=chatbox_id, message=new_msg, from_bot=False)
+    img_url = request.json.get("img_url")
+
+    if new_msg is None:
+        new_msg = None
+
+    if img_url is None:
+        img_url = None 
+
+    msg = Message(chatbox_id=chatbox_id, message=new_msg, img_url=img_url, from_bot=False)
     db.session.add(msg)
     db.session.commit()
 
