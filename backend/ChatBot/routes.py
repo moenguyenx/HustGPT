@@ -113,7 +113,8 @@ def get_user_messages(chatbox_id):
         msg = {
             'id': message.id,
             'message': message.message,
-            'from_bot': message.from_bot
+            'from_bot': message.from_bot,
+            'img_url': message.img_url
         }
         messages_data.append(msg)
     response = jsonify(messages_data), 200

@@ -6,9 +6,17 @@ import classes from './Message.module.css';
 export default function Message({ from_bot, message, img_url }) {
     return (
         <div className={from_bot ? classes.chatbot : classes.chat}>
-            <Image src={from_bot ? gptImgLogo : userImg} alt="" className={classes.chatImg} width={56} height={56} />
-            {message && <p className={classes.txt}>{message}</p>}
-            {img_url && <Image className={classes.imgPrompt} src={img_url} alt="Image Prompt"/>}
+            <div className={classes.wrapper}>
+                <Image src={from_bot ? gptImgLogo : userImg} alt="" className={classes.chatImg} width={56} height={56} />
+                {message && <p className={classes.txt}>{message}</p>}
+            </div>
+            
+            <div className={classes.imgPrompt}>
+                {img_url && <Image src={img_url} alt="Image Prompt" width={0}
+                                    height={0}
+                                    sizes="100vw"
+                                    style={{ width: '100%', height: 'auto' }}/>}
+            </div>
         </div>
     );
 }

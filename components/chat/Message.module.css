@@ -2,8 +2,6 @@
     margin: 1rem;
     padding: 2rem 3rem;
     font-size: 1.2rem;
-    display: flex;
-    align-items: flex-start;
     text-align: justify;
 }
 
@@ -17,12 +15,17 @@
     margin: 1rem;
     padding: 2rem 3rem;
     font-size: 1.2rem;
-    display: flex;
-    align-items: flex-start;
+    /* display: flex;
+    align-items: flex-start; */
     text-align: justify;
     background: rgba(28, 30, 58, 1);
     width: fit-content;
     border-radius: 0.5rem;
+}
+
+.wrapper{
+    display: flex;
+    padding-bottom: 1rem;
 }
 
 .txt {
@@ -30,5 +33,6 @@
 }
 
 .imgPrompt {
-    padding: auto;
+    margin-left: calc(56px + 2rem);
+    border-radius: 25%;
 }

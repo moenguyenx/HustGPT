@@ -18,7 +18,7 @@ function MainChat ({ selectedChatbox }) {
     const [messages, setMessages] = useState([]);
     const [prompt, setPrompt] = useState("");
     const [file, setFile] = useState(null);
-    const [previewUrl, setPreviewUrl] = useState(null)
+    const [previewUrl, setPreviewUrl] = useState(null);
 
     useEffect(() => {
         if (selectedChatbox !== null) {
@@ -67,9 +67,13 @@ function MainChat ({ selectedChatbox }) {
                 message: null,
                 img_url: null
             }
+
+            //! Case 1: Prompt only
             if (prompt !== "") 
             {
-                data.message = prompt;  
+                data.message = prompt; 
+
+                //! Case 2: Prompt + Image data
                 if (file) {
                     const formData = new FormData();
                     formData.append("file", file);
@@ -85,9 +89,10 @@ function MainChat ({ selectedChatbox }) {
                     }
                 }
                 const userMessage = { ...data, from_bot: false };
-                setMessages([...messages, userMessage]);
-                setPrompt("");
+                setMessages(prevMessages => [...prevMessages, userMessage]);
+                
             } 
+            //! Case 3: Image data only
             else if (prompt === "" && file !== null)
             {
                 const formData = new FormData();
@@ -99,26 +104,32 @@ function MainChat ({ selectedChatbox }) {
                     });
                     const { img_url } = await response.json()
                     data.img_url = img_url;
-                } catch ( error) {
+                } catch (error) {
                     console.error(error);
                 }
             }
-            // request backend
-            const response = await axios({
-                method: "POST",
-                url: `${BACKEND_URL}/message/${selectedChatbox}`,
-                data: data,
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            // Request backend
+            if (data.message !== null || data.img_url !== null) {
+                const response = await axios({
+                    method: "POST",
+                    url: `${BACKEND_URL}/message/${selectedChatbox}`,
+                    data: data,
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
 
-            const botMessage = {
-                message: response.data.msg, 
-                img_url: response.data.img_url, 
-                from_bot: true 
-            };
-            setMessages(prevMessages => [...prevMessages, botMessage]);
+                const botMessage = {
+                    message: response.data.msg, 
+                    img_url: response.data.img_url, 
+                    from_bot: true 
+                };
+                setMessages(prevMessages => [...prevMessages, botMessage]);
+
+                setPrompt("");
+                setFile(null);
+                setPreviewUrl(null);
+            }
         } catch (error) {
             console.log(error);
         }
@@ -137,7 +148,7 @@ function MainChat ({ selectedChatbox }) {
             </Messages>
             <div className={classes.chatFooter}>
                 <div className={classes.inp}>
-                    <input type="text" name="message" 
+                <input type="text" name="message" 
                             placeholder="Send a Message"
                             value={prompt}
                             onChange={handlePromptChange}

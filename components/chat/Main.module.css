@@ -36,6 +36,8 @@
 .inp>input, .send {
     background: transparent;
     border: none;
+    cursor: pointer;
+    margin-right: 1rem;
 }
 
 .chatFooter>p {
