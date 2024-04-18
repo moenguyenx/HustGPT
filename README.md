@@ -1,4 +1,14 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Overview
+This is a [Next.js](https://nextjs.org/) project called HustGPT.
+
+Could say it base on the idea of ChatGPT with additional feature  like image processing, allowing users to POST Image with Prompt and the server will return proccessed Image.
+
+Frameworks used:
+- [Next.js](https://nextjs.org/) - Frontend framework 
+- [Python Flask](https://flask.palletsprojects.com/en/3.0.x/) - Backend framework for Chat API and Image Processing engine
+- [AWS Bucket S3](https://aws.amazon.com/s3/) - Image Storage 
+
+The project was executed by Nguyen Quang Minh - 20214010, Hanoi University of Science and Technology.
 
 ## Getting Started
 
@@ -14,23 +24,29 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Second, open another Terminal to run the Python backend server:
+```bash
+# Go to 'backend' directory
+cd backend
+# Create venv
+python -m venv venv
+# Activate venv
+venv/Scripts/activate
+# Install dependencies
+pip install -r requirements.txt
+# Go back to project directory
+cd ..
+# Run the server
+npm run backend
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+To learn more about Frameworks used in this project, take a look at the following resources:
 
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Python Flask Documentation](https://flask.palletsprojects.com/en/3.0.x/) - learn about Flask server and API Routes.
+- [AWS Client S3](https://www.npmjs.com/package/@aws-sdk/client-s3) - learn how to handle file upload from Next.js server to AWS Bucket S3.
+- [AWS Boto3 SDK](https://pypi.org/project/boto3/) - learn how to handle file upload from Python server to AWS Bucket S3.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
