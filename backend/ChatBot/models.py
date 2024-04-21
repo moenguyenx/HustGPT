@@ -9,9 +9,20 @@ class User(db.Model):
     chatboxes = db.relationship('Chatbox', backref='user', lazy=True)
 
     def set_password(self, password):
+        """
+        Password hash function before saving into db.
+
+        params: Input password from user
+        """
         self.password = bcrypt.generate_password_hash(password=password)
 
     def check_password(self, password):
+        """
+        Check password hash vs input password.
+
+        params: Input password
+        returns: Boolean
+        """
         return bcrypt.check_password_hash(pw_hash=self.password, password=password)
     
 

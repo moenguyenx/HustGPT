@@ -37,9 +37,9 @@ def create_token():
     user = User.query.filter_by(username=username).first()
 
     if not user:
-        return jsonify({"msg": "User not exist, please Sign up!"}), 401
+        return jsonify({"msg": "Invalid username or password"}), 401
     elif not user.check_password(password):
-        return jsonify({"msg": "Wrong Password!"}), 401
+        return jsonify({"msg": "Invalid username or password"}), 401
 
 
     access_token = create_access_token(identity=user.id)
@@ -59,12 +59,14 @@ def logout():
 #################################################################################
 def create_user(username, password, email):
     """
+    Create user from Frontend request
+
     params: Username, Password and Email
     return: JSON msg if Succeed for Fail 
     """
     exist = User.query.filter_by(username=username).first()
     if not exist:
-        new_user = User(username=username, password=User.set_password(password), email=email)
+        new_user = User(username=username, password=User.set_password(password=password), email=email)
         db.session.add(new_user)
         db.session.commit()
         response = jsonify({"msg": "Successfully Created New User!"}), 201
