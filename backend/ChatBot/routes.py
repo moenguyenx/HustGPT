@@ -124,7 +124,7 @@ def get_user_messages(chatbox_id):
 
 
 #################################################################################
-# POST Chatboxes & Messages(also get response from OpenAI API)
+# POST Chatboxes & Messages 
 #################################################################################
 @api.route("/create_chatbox", methods=["POST"])
 @jwt_required()

@@ -22,7 +22,13 @@ function MainChat ({ selectedChatbox }) {
 
     useEffect(() => {
         if (selectedChatbox !== null) {
-            axios.get(`${BACKEND_URL}/messages/${selectedChatbox}`)
+            axios.get(
+                `${BACKEND_URL}/messages/${selectedChatbox}`, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
                  .then(response => {
                      setMessages(response.data);
                  })
