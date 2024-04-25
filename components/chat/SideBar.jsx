@@ -9,9 +9,12 @@ import useToken from "@/components/auth/useToken";
 import useUser from "@/components/auth/useUser";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import axios from "axios";
+
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function SideBar({ username, chatboxes, onChatboxSelect, createNewChat }) {
-  const {removeToken} = useToken();
+  const { removeToken } = useToken();
   const { removeUsername } = useUser();
   const router = useRouter();
 
@@ -28,18 +31,21 @@ export default function SideBar({ username, chatboxes, onChatboxSelect, createNe
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, []); // This effect runs only once when the component mounts
+  }, []); 
   
-  function handleLogOut() {
+  async function handleLogOut() {
     removeToken();
     removeUsername();
+    await axios.post(`${BACKEND_URL}/logout`);
     router.push('/login');
   }
+
   function handleChatboxClick(chatboxId) {
     if (onChatboxSelect) {
       onChatboxSelect(chatboxId); // Call the onChatboxSelect prop with the selected chatboxId
     }
   }
+
     return (
         <>
         <div className={classes.sideBar}>

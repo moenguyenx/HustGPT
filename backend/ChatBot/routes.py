@@ -13,6 +13,9 @@ Authentication Reference:
 '''
 @api.after_request
 def refresh_expiring_jwts(response):
+    """
+    Refresh expiring JWT after 30mins
+    """
     try:
         exp_timestamp = get_jwt()["exp"]
         now = datetime.now(timezone.utc)
@@ -31,6 +34,12 @@ def refresh_expiring_jwts(response):
 
 @api.route('/token', methods=["POST"])
 def create_token():
+    """
+    Handle create JWT Token
+
+    params: None
+    returns: Access token if user valid
+    """
     username = request.json.get("username")
     password = request.json.get("password")
 
@@ -78,6 +87,12 @@ def create_user(username, password, email):
 
 @api.route("/register", methods=["POST"])
 def register():
+    """
+    Call create_user() function to perform user creation
+
+    params: None
+    returns: Boolean (succeed or failed)
+    """
     data = request.json
     input_username = data.get("username")
     input_password = data.get("password")
@@ -91,6 +106,9 @@ def register():
 @api.route("/chatboxes", methods=["GET"])
 @jwt_required()
 def get_user_chatboxes():
+    """
+    Extract userID from JWT to query user's chatboxes
+    """
     user_id = get_jwt_identity()
     chatboxes = Chatbox.query.filter_by(user_id=user_id).order_by(Chatbox.created_at.desc()).all()
     data = []
@@ -109,6 +127,9 @@ def get_user_chatboxes():
 @api.route("/chat/<int:chatbox_id>", methods=["GET"])
 @jwt_required()
 def get_user_messages(chatbox_id):
+    """
+    Extract chatboxID from URL to query user's message
+    """
     messages = Message.query.filter_by(chatbox_id=chatbox_id).order_by(Message.created_at).all()
     messages_data = []
     for message in messages:
@@ -129,6 +150,9 @@ def get_user_messages(chatbox_id):
 @api.route("/create_chatbox", methods=["POST"])
 @jwt_required()
 def create_chatbox():
+    """
+    Extract UserID from JWT then create chatbox 
+    """
     user_id = get_jwt_identity()
     topic = request.json.get("topic")
     new_chatbox = Chatbox(user_id=user_id, topic=topic)
@@ -142,9 +166,15 @@ def create_chatbox():
 
 @api.route("/message/<int:chatbox_id>", methods=["POST"])
 @jwt_required()
-def post_message(chatbox_id):
-    new_msg = request.json.get("message")
-    img_url = request.json.get("img_url")
+async def post_message(chatbox_id):
+    """
+    Asynchronous function handle prompt requests then process using AI model
+
+    params: ChatboxID
+    returns: Processed Image URL as prompt request
+    """
+    new_msg = await request.json.get("message")
+    img_url = await request.json.get("img_url")
 
     if new_msg is None:
         new_msg = None

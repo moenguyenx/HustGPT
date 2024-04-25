@@ -15,6 +15,6 @@ api.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///chatapp.db"
 bcrypt = Bcrypt(api)
 jwt = JWTManager(api)
 db = SQLAlchemy(api)
-CORS(api)
+CORS(app=api, supports_credentials=True)
 
 from ChatBot import routes
