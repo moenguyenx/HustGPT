@@ -52,7 +52,8 @@ def create_token():
 
 
     access_token = create_access_token(identity=user.id)
-    response = {"access_token":access_token}
+    response = {"access_token":access_token,
+                "username": user.username.title()}
     return response
 
 

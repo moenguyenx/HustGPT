@@ -6,16 +6,14 @@ import { useRouter } from 'next/navigation';
 import axios from "axios";
 import MainChat from "@/components/chat/Main";
 import SideBar from "@/components/chat/SideBar";
-import useToken from "@/components/auth/useToken";
 import Modal from "@/components/chat/Modal";
 import { ToastContainer } from "react-toastify";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+//https://github.com/shadcn-ui/taxonomy/blob/main/components/user-auth-form.tsx
 
 export default function Home() {
-  const {token} = useToken();
   const router = useRouter();
-  const username = localStorage.getItem('username');
 
   const [chatboxes, setChatboxes] = useState([]);
   const [selectedChatbox, setSelectedChatbox] = useState(null);
