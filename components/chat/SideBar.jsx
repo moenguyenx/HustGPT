@@ -17,21 +17,6 @@ export default function SideBar({ username, chatboxes, onChatboxSelect, createNe
   const { removeToken } = useToken();
   const { removeUsername } = useUser();
   const router = useRouter();
-
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      // Remove token when the user closes the tab or browser window
-      // removeToken();
-      // removeUsername();
-      console.log("hehe");
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []); 
   
   async function handleLogOut() {
     removeToken();
