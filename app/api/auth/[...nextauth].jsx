@@ -5,12 +5,15 @@ import axios from "axios";
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export const authOptions = {
+    pages: {
+        signIn: "/login",
+    },
     providers: [
         Credentials({
             name: "Credentials",
             type: "credentials",
             credentials: {
-                username: { label: "Username", type: "username" },
+                username: { label: "Username", type: "text" },
                 password: { label: "Password", type: "password"}
             },
             async authorize(credentials, req){
@@ -20,7 +23,7 @@ export const authOptions = {
                     data: credentials,
                     headers: { "Content-Type": "application/json" }
                 })
-                const user = await res.json();
+                const user = await res.data;
                 if (res.ok && user) {
                     return user;
                 }
@@ -41,9 +44,9 @@ export const authOptions = {
 
           return token;
         },
-        session: ({ session, token, user }) => {
+        session: async ({ session, token, user }) => {
           if (token) {
-            session.user.username = token.userName;
+            session.user.username = token.username;
             session.user.access_token = token.access_token;
           }
           return session;

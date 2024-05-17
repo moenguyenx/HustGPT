@@ -3,38 +3,29 @@ import classes from './page.module.css';
 import '../global.css';
 import Link from 'next/link';
 import { useState } from 'react';
-import axios from 'axios';
-import useToken from '@/components/auth/useToken';
-import useUser from '@/components/auth/useUser';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useRouter } from 'next/navigation';
-
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+import { useSearchParams } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 
 export default function Login() {  //React-toastify
-    const router = useRouter();
-    const { setToken } = useToken();
-    const { setUsername } = useUser();
 
     const [loginForm, setloginForm] = useState({
           username: "",
           password: ""
         })
   
-    function logMeIn(event) {
-        axios({
-          method: "POST",
-          url: `${BACKEND_URL}/token`,
-          data:{
+    async function logMeIn(event) {
+        const signInResult = await signIn(
+          'credentials',
+          {
             username: loginForm.username,
-            password: loginForm.password
-           }
-        })
-        .then((response) => {
-          setToken(response.data.access_token);
-          setUsername(response.data.username)
-          toast.success(`Welcome ${response.data.username}`, {
+            password: loginForm.password,
+            callbackUrl: '/'
+          }
+        )
+        if (!signInResult.ok) {
+          toast.error("Failed to login", {
             position: "top-center",
             autoClose: 5000,
             hideProgressBar: false,
@@ -43,24 +34,8 @@ export default function Login() {  //React-toastify
             draggable: true,
             progress: undefined,
             theme: "light",
-          });
-          setTimeout(() => {
-            router.push("/");
-          }, 3000);
-          
-        }).catch((error) => {
-          console.log(error.response.data.msg);
-          toast.error(error.response.data.msg, {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-        })
+          })
+        }
   
         setloginForm(({
           username: "",
