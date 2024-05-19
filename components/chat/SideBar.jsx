@@ -5,24 +5,16 @@ import userIcon from "../../assets/user.svg"
 import logOutIcon from "../../assets/logOut.svg"
 import classes from "./SideBar.module.css"
 import Image from "next/image";
-import useToken from "@/components/auth/useToken";
-import useUser from "@/components/auth/useUser";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { signOut } from "next-auth/react";
 import axios from "axios";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function SideBar({ username, chatboxes, onChatboxSelect, createNewChat }) {
-  const { removeToken } = useToken();
-  const { removeUsername } = useUser();
-  const router = useRouter();
   
   async function handleLogOut() {
-    removeToken();
-    removeUsername();
     await axios.post(`${BACKEND_URL}/logout`);
-    router.push('/login');
+    await signOut({callbackUrl: '/login'})
   }
 
   function handleChatboxClick(chatboxId) {

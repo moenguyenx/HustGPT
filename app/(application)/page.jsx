@@ -1,44 +1,44 @@
-'use client'
-import classes from "./page.module.css";
-import './global.css'
-import { useEffect, useState } from "react";
+'use client';
+import classes from './page.module.css';
+import './global.css';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from "axios";
-import MainChat from "@/components/chat/Main";
-import SideBar from "@/components/chat/SideBar";
-import Modal from "@/components/chat/Modal";
-import { ToastContainer } from "react-toastify";
+import { useSession } from 'next-auth/react';
+import axios from 'axios';
+import MainChat from '@/components/chat/Main';
+import SideBar from '@/components/chat/SideBar';
+import Modal from '@/components/chat/Modal';
+import { ToastContainer } from 'react-toastify';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-//https://github.com/shadcn-ui/taxonomy/blob/main/components/user-auth-form.tsx
 
 export default function Home() {
+  const { data: session, status } = useSession();
   const router = useRouter();
-
   const [chatboxes, setChatboxes] = useState([]);
   const [selectedChatbox, setSelectedChatbox] = useState(null);
   const [modalState, setModalState] = useState(false);
   const [createSuccess, setCreateSuccess] = useState(false);
 
   useEffect(() => {
-    if (!token) {
+    if (status === 'unauthenticated') {
       router.push('/login');
-    } else {
+    } else if (status === 'authenticated') {
       axios({
-        method: "GET",
+        method: 'GET',
         url: `${BACKEND_URL}/chatboxes`,
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${session.user.access_token}`,
+        },
       })
-      .then((response) => {
-        console.log(response.data);
-        setChatboxes(response.data);
-      }).catch((error) => {
-        console.log(error.response.data.msg);
-      })
+        .then((response) => {
+          setChatboxes(response.data);
+        })
+        .catch((error) => {
+          console.log(error.response.data.msg);
+        });
     }
-  }, [token, createSuccess]);
+  }, [status, session, createSuccess, router]);
 
   function handleChatboxSelection(chatboxId) {
     setSelectedChatbox(chatboxId);
@@ -53,11 +53,18 @@ export default function Home() {
   }
 
   return (
-    <div className={classes.App}>
-      <ToastContainer />
-      {modalState && <Modal toggleModal={handleModal} onChatboxCreate={handleChatboxCreate}/>}
-      <SideBar username={username} chatboxes={chatboxes} onChatboxSelect={handleChatboxSelection} createNewChat={handleModal}/>
-      <MainChat selectedChatbox={selectedChatbox}/>
-    </div>
+    <>
+      <div className={classes.App}>
+        <ToastContainer />
+        {modalState && <Modal toggleModal={handleModal} onChatboxCreate={handleChatboxCreate} />}
+        <SideBar
+          username={session?.user.username}
+          chatboxes={chatboxes}
+          onChatboxSelect={handleChatboxSelection}
+          createNewChat={handleModal}
+        />
+        <MainChat selectedChatbox={selectedChatbox} />
+      </div>
+    </>
   );
 }

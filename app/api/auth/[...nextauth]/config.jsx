@@ -1,4 +1,3 @@
-import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import axios from "axios";
 
@@ -17,16 +16,21 @@ export const authOptions = {
                 password: { label: "Password", type: "password"}
             },
             async authorize(credentials, req){
-                const res = await axios({
-                    url: BACKEND_URL,
-                    method: "POST",
-                    data: credentials,
-                    headers: { "Content-Type": "application/json" }
-                })
-                const user = await res.data;
-                if (res.ok && user) {
-                    return user;
+                try {
+                    const res = await axios({
+                        url: `${BACKEND_URL}/token`,
+                        method: "POST",
+                        data: credentials,
+                        headers: { "Content-Type": "application/json" }
+                    })
+                    const user = await res.data;
+                    if (user) {
+                        return user;
+                    }
+                } catch (error) {
+                    console.log(error);
                 }
+                
                 return null;
             }
         })
@@ -53,5 +57,3 @@ export const authOptions = {
         },
     },
 }
-
-export default NextAuth(authOptions)
