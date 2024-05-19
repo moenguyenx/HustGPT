@@ -1,3 +1,5 @@
+import NextAuthProvider from "./context";
+
 export const metadata = {
   title: "HustGPT",
   description: "AI chatbot created by Minh",
@@ -6,7 +8,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <NextAuthProvider>{children}</NextAuthProvider>
+      </body>
     </html>
   );
 }

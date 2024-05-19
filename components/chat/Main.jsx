@@ -5,15 +5,15 @@ import classes from "./Main.module.css"
 import Image from "next/image";
 import Message from "./Message";
 import Messages from "./Messages";
-import useToken from "@/components/auth/useToken";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 function MainChat ({ selectedChatbox }) {
-    const { token } = useToken();
-
+    const {data: session, status} = useSession();
+    const token = session?.user.access_token;
     const msgEnd = useRef(null);
     const [messages, setMessages] = useState([]);
     const [prompt, setPrompt] = useState("");

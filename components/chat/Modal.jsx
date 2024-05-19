@@ -1,15 +1,16 @@
 "use client";
 import classes from "./Modal.module.css";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 import axios from "axios";
-import useToken from "@/components/auth/useToken";
 import { toast } from "react-toastify";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function Modal({ toggleModal, onChatboxCreate }) {
+  const {data: session, status} = useSession();
+  const token = session?.user.access_token;
   const [chatTopic, setChatTopic] = useState("");
-  const { token } = useToken();
 
   function handleChange(event) {
     const { value } = event.target;

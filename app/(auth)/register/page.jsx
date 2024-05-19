@@ -1,6 +1,6 @@
 'use client';
 import classes from './page.module.css';
-import '../global.css';
+import '@/app/(application)/global.css';
 import Link from 'next/link';
 import { useState } from 'react';
 import axios from 'axios';
