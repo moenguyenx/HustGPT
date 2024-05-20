@@ -94,9 +94,6 @@ function MainChat ({ selectedChatbox }) {
                         console.error(error);
                     }
                 }
-                const userMessage = { ...data, from_bot: false };
-                setMessages(prevMessages => [...prevMessages, userMessage]);
-                
             } 
             //! Case 3: Image data only
             else if (prompt === "" && file !== null)
@@ -114,6 +111,9 @@ function MainChat ({ selectedChatbox }) {
                     console.error(error);
                 }
             }
+            const userMessage = { ...data, from_bot: false };
+            setMessages(prevMessages => [...prevMessages, userMessage]);
+
             // Request backend
             if (data.message !== null || data.img_url !== null) {
                 const response = await axios({

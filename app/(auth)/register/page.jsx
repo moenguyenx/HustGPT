@@ -43,7 +43,6 @@ export default function Register() {
       });
       
     }).catch((error) => {
-      // console.log(error.response.data.msg);
       toast.error(error.response.data.msg, {
         position: "top-center",
         autoClose: 5000,

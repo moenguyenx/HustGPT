@@ -9,6 +9,7 @@ import MainChat from '@/components/chat/Main';
 import SideBar from '@/components/chat/SideBar';
 import Modal from '@/components/chat/Modal';
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
