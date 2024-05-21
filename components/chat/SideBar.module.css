@@ -27,8 +27,23 @@
 
 .upperSideBottom {
     overflow-y: scroll;
-    max-height: 700px; /* Adjust the max-height as needed */
+    max-height: 380px; /* Giá trị mặc định cho màn hình nhỏ hơn 1080p */
 }
+
+/* Media query cho màn hình 1080p */
+@media (min-width: 1920px) {
+    .upperSideBottom {
+        max-height: 380px;
+    }
+}
+
+/* Media query cho màn hình 2k (2560px) */
+@media (min-width: 2560px) {
+    .upperSideBottom {
+        max-height: 700px;
+    }
+}
+
 
 .upperSideBottom::-webkit-scrollbar {
     width: 0px;
