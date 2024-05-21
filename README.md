@@ -10,6 +10,18 @@ Frameworks used:
 
 The project was executed by Nguyen Quang Minh - 20214010, Hanoi University of Science and Technology.
 
+## Prerequisites
+**1. Create a Storage Bucket on [AWS S3](https://aws.amazon.com/s3/)**
+
+- Watch some tutorials on YouTube on how to create a **public accessible** bucket, S3 will provide you access credentials. Then put it in .env file
+```bash
+# .env file
+AWS_S3_REGION="your-s3-region"
+AWS_S3_ACCESS_KEY_ID="your-s3-access-key-id"
+AWS_S3_SECRET_ACCESS_KEY="your-s3-secret-key-id"
+AWS_S3_BUCKET_NAME="your-s3-bucket-name"
+```
+
 ## Getting Started
 
 First, run the development server:
