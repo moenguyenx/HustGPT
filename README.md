@@ -4,7 +4,7 @@ This is a [Next.js](https://nextjs.org/) project called HustGPT.
 Could say it base on the idea of ChatGPT with additional feature  like image processing, allowing users to POST Image with Prompt and the server will return proccessed Image.
 
 Frameworks used:
-- [Next.js](https://nextjs.org/) - Frontend framework 
+- [Next.js](https://nextjs.org/) - Frontend framework with [NextAuth.js](https://next-auth.js.org/) for advance authentication
 - [Python Flask](https://flask.palletsprojects.com/en/3.0.x/) - Backend framework for Chat API and Image Processing engine
 - [AWS Bucket S3](https://aws.amazon.com/s3/) - Image Storage 
 
