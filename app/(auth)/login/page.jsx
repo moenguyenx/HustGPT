@@ -89,7 +89,7 @@ export default function Login() {
                         required>
                     </input>
 
-                    <p className={classes.check}>Don't have account? <Link href="/register">Register</Link></p>
+                    <p className={classes.check}>Don&apos;t have account? <Link href="/register">Register</Link></p>
 
                     <button className={classes.submitBtn} type='submit'>Login</button>
                 </form>
