@@ -26,3 +26,6 @@ def obj_seg_func(img_path, img_res_path):
     img_res = img_vector.reshape(img.shape[0], img.shape[1], img.shape[2])
 
     cv2.imwrite(img_res_path, img_res)
+    
+    
+print("")
