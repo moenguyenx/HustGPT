@@ -3,6 +3,7 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from openai import OpenAI
 from datetime import timedelta
 
 api = Flask(__name__)
@@ -15,6 +16,11 @@ api.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///chatapp.db"
 bcrypt = Bcrypt(api)
 jwt = JWTManager(api)
 db = SQLAlchemy(api)
+client = OpenAI(
+    api_key='your-api-key',
+    organization='your-org',
+    project='your-prj-ID'
+)
 CORS(app=api, supports_credentials=True)
 
 from ChatBot import routes

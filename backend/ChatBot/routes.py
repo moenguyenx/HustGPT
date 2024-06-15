@@ -1,5 +1,5 @@
 import json
-from ChatBot import api, db
+from ChatBot import api, db, client
 from ChatBot.models import User, Chatbox, Message
 from datetime import datetime, timezone, timedelta
 from flask import jsonify, request
@@ -76,7 +76,8 @@ def create_user(username, password, email):
     """
     exist = User.query.filter_by(username=username).first()
     if not exist:
-        new_user = User(username=username, password=User.set_password(password=password), email=email)
+        new_user = User(username=username, email=email)
+        new_user.set_password(password=password)
         db.session.add(new_user)
         db.session.commit()
         response = jsonify({"msg": "Successfully Created New User!"}), 201
@@ -167,27 +168,38 @@ def create_chatbox():
 
 @api.route("/message/<int:chatbox_id>", methods=["POST"])
 @jwt_required()
-async def post_message(chatbox_id):
+def post_message(chatbox_id):
     """
     Asynchronous function handle prompt requests then process using AI model
 
     params: ChatboxID
     returns: Processed Image URL as prompt request
     """
-    new_msg = await request.json.get("message")
-    img_url = await request.json.get("img_url")
+    new_msg = request.json.get("message", None)
+    img_url = request.json.get("img_url", None)
 
-    if new_msg is None:
-        new_msg = None
-
-    if img_url is None:
-        img_url = None 
-
-    msg = Message(chatbox_id=chatbox_id, message=new_msg, img_url=img_url, from_bot=False)
-    db.session.add(msg)
+    user_msg = Message(chatbox_id=chatbox_id, message=new_msg, img_url=img_url, from_bot=False)
+    db.session.add(user_msg)
     db.session.commit()
 
-    response = jsonify({"msg": "Posted new message"}), 200
+    completion = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+          {"role": "system", "content": "You are a helpful assistant."},
+          {"role": "user", "content": new_msg}
+        ]
+    )
+
+    bot_reply = completion.choices[0].message.content
+
+    bot_msg = Message(chatbox_id=chatbox_id, message=bot_reply, from_bot=True)
+    db.session.add(bot_msg)
+    db.session.commit()
+
+    response = jsonify({
+        "msg": bot_reply,
+        "img_url": None
+    }), 200
 
     return response
 

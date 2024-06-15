@@ -14,7 +14,7 @@ class User(db.Model):
 
         params: Input password from user
         """
-        self.password = bcrypt.generate_password_hash(password=password)
+        self.password = bcrypt.generate_password_hash(password=password).decode("utf-8")
 
     def check_password(self, password):
         """
